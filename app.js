@@ -3,12 +3,27 @@
 const { App } = require('@slack/bolt');
 const schedule = require('node-schedule');
 
-const CHANNEL_ID = process.env.SLACK_CHANNEL_ID;
-const USER_ID = 'U0RELM4CU';
-const REACTION = 'postal_horn';
+const ChannelId = 'CGLGM4C20';
+const Users = new Map([
+  ['U0RG22XRV', ':dragana:'],
+  ['U0RELM4CU', ':jocke:'],
+  ['U0REZJ3GB', ':lars:'],
+  ['UR29QEMCJ', ':tangui:'],
+  ['U02JWHNFCP5', ':zarko:'],
+  ['U032BELHP38', ':filip:']
+]);
+const Reaction = 'postal_horn';
+const MaxDuration = 60;
+
+const _messageBlock = {
+  type: 'section',
+  text: {
+    type: 'mrkdwn',
+    text: `Reminder: Standup ${Array.from(Users.keys()).map(u => '<@' + u + '>').join('')}`
+  }
+};
 
 let _messageTs;
-let _messageText = `Standup <@${USER_ID}>`;
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -18,36 +33,55 @@ const app = new App({
 });
 
 app.event('reaction_added', async ({ event }) => {
-  console.log(event);
-  if (event.reaction == REACTION && event.item.ts == _messageTs && event.user == USER_ID) {
+  if (event.reaction == Reaction && event.item.ts == _messageTs && Users.has(event.user)) {
+    console.log(event);
     let duration = event.event_ts - _messageTs;
 
-    let durationText;
-    if (duration < 1)
-      durationText = `${(duration * 1000).toFixed(0)} milliseconds`;
-    else
-      durationText = `${duration.toFixed(2)} seconds`;
+    if (duration < MaxDuration) {
+      let durationText = duration < 1 ?
+        `${(duration * 1000).toFixed(0)} milliseconds` :
+        `${duration.toFixed(2)} seconds`;
 
-    const result = await app.client.chat.update({
-      channel: CHANNEL_ID,
-      ts: _messageTs,
-      text: `${_messageText}\n<@${event.user}> wins in ${durationText}!`
-    });
-    console.log(result);
+      let contextBlock = {
+        type: 'context',
+        elements: [{
+          type: 'mrkdwn',
+          text: `${Users.get(event.user)} wins in ${durationText}!`
+        }]
+      };
+
+      const result = await app.client.chat.update({
+        channel: ChannelId,
+        ts: _messageTs,
+        text: contextBlock.elements[0].text,
+        blocks: [
+          _messageBlock,
+          contextBlock
+        ]
+      });
+      console.log(result);
+    }
+
+    _messageTs = undefined;
   }
 });
+
+async function PostMessage() {
+  const result = await app.client.chat.postMessage({
+    channel: ChannelId,
+    text: _messageBlock.text.text,
+    blocks: [
+      _messageBlock
+    ]
+  });
+  _messageTs = result.ts;
+  console.log(result);
+}
 
 (async () => {
   await app.start(process.env.PORT || 3000);
 
-  const job = schedule.scheduleJob('0 10 * * 1-5', async () => {
-    const result = await app.client.chat.postMessage({
-      channel: CHANNEL_ID,
-      text: _messageText
-    });
-    _messageTs = result.ts;
-    console.log(result);
-  });
+  const job = schedule.scheduleJob('0 10 * * 1-5', PostMessage);
 
-  console.log('⚡️ Bolt app is running!');
+  console.log('Spirit of Mihailo is running!');
 })();

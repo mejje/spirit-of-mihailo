@@ -12,7 +12,6 @@ Environment=NODE_ENV=production
 Environment="SLACK_APP_TOKEN="
 Environment="SLACK_BOT_TOKEN="
 Environment="SLACK_SIGNING_SECRET="
-Environment="SLACK_CHANNEL_ID="
 WorkingDirectory=/home/ubuntu/spirit-of-mihailo
 
 [Install]
