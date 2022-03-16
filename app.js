@@ -1,10 +1,14 @@
+#!/usr/bin/env node
+
 const { App } = require('@slack/bolt');
+const schedule = require('node-schedule');
 
 const CHANNEL_ID = process.env.SLACK_CHANNEL_ID;
 const USER_ID = 'U0RELM4CU';
 const REACTION = 'postal_horn';
 
-let _messageTs, _messageText;
+let _messageTs;
+let _messageText = `Standup <@${USER_ID}>`;
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -36,14 +40,14 @@ app.event('reaction_added', async ({ event }) => {
 (async () => {
   await app.start(process.env.PORT || 3000);
 
-  _messageText = `Standup <@${USER_ID}>`;
-
-  const result = await app.client.chat.postMessage({
-    channel: CHANNEL_ID,
-    text: _messageText
+  const job = schedule.scheduleJob('0 10 * * 1-5', async () => {
+    const result = await app.client.chat.postMessage({
+      channel: CHANNEL_ID,
+      text: _messageText
+    });
+    _messageTs = result.ts;
+    console.log(result);
   });
-  _messageTs = result.ts;
-  console.log(result);
 
   console.log('⚡️ Bolt app is running!');
 })();
