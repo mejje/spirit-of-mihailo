@@ -1,0 +1,15 @@
+[Unit]
+Description=Spirit of Mihailo
+After=network.target
+
+[Service]
+ExecStart=/home/ubuntu/spirit-of-mihailo/app.js
+Restart=always
+User=nobody
+Group=nogroup
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=NODE_ENV=production
+WorkingDirectory=/home/ubuntu/spirit-of-mihailo
+
+[Install]
+WantedBy=multi-user.target
