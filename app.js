@@ -3,7 +3,7 @@
 const { App } = require('@slack/bolt');
 const schedule = require('node-schedule');
 
-const ChannelId = 'CGLGM4C20';
+const ChannelId = process.env.CHANNEL_ID;
 const Users = new Map([
   ['U0RG22XRV', ':dragana:'],
   ['U0RELM4CU', ':jocke:'],
@@ -23,7 +23,7 @@ const _messageBlock = {
   }
 };
 
-let _messageTs;
+let _messageTs, _messageTime;
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -33,9 +33,14 @@ const app = new App({
 });
 
 app.event('reaction_added', async ({ event }) => {
+  let eventTime = new Date().getTime();
   if (event.reaction == Reaction && event.item.ts == _messageTs && Users.has(event.user)) {
     console.log(event);
-    let duration = event.event_ts - _messageTs;
+    console.log(`Event latency: ${eventTime - Number(event.event_ts) * 1000} ms.`);
+    let serverDuration = Number(event.event_ts) - Number(event.item.ts);
+    let clientDuration = (eventTime - _messageTime) / 1000;
+    console.log(`Server duration: ${serverDuration * 1000} ms, client duration: ${clientDuration * 1000} ms.`);
+    let duration = clientDuration; //TODO: adjust for latency?
 
     if (duration < MaxDuration) {
       let durationText = duration < 1 ?
@@ -75,13 +80,19 @@ async function PostMessage() {
     ]
   });
   _messageTs = result.ts;
+  _messageTime = new Date().getTime();
   console.log(result);
+  console.log(`Message latency: ${_messageTime - Number(_messageTs) * 1000} ms.`);
 }
 
 (async () => {
   await app.start(process.env.PORT || 3000);
 
-  const job = schedule.scheduleJob('0 10 * * 1-5', PostMessage);
+  if (process.env.NODE_ENV == 'production') {
+    schedule.scheduleJob('0 10 * * 1-5', PostMessage);
+  } else {
+    await PostMessage();
+  }
 
   console.log('Spirit of Mihailo is running!');
 })();
