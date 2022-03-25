@@ -35,6 +35,7 @@ const app = new App({
 app.event('reaction_added', async ({ event }) => {
   let eventTime = new Date().getTime();
   if (event.reaction == Reaction && event.item.ts == _messageTs && Users.has(event.user)) {
+    _messageTs = undefined;
     console.log(event);
     console.log(`Event latency: ${eventTime - Number(event.event_ts) * 1000} ms.`);
     let serverDuration = Number(event.event_ts) - Number(event.item.ts);
@@ -57,7 +58,7 @@ app.event('reaction_added', async ({ event }) => {
 
       const result = await app.client.chat.update({
         channel: ChannelId,
-        ts: _messageTs,
+        ts: event.item.ts,
         text: contextBlock.elements[0].text,
         blocks: [
           _messageBlock,
@@ -66,8 +67,6 @@ app.event('reaction_added', async ({ event }) => {
       });
       console.log(result);
     }
-
-    _messageTs = undefined;
   }
 });
 
