@@ -23,7 +23,7 @@ const _messageBlock = {
   }
 };
 
-let _messageTs, _messageTime;
+let _messageTs, _messageTime, _messageSent;
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -35,15 +35,16 @@ const app = new App({
 app.event('reaction_added', async ({ event }) => {
   let eventTime = new Date().getTime();
   if (event.reaction == Reaction && event.item.ts == _messageTs && Users.has(event.user)) {
-    _messageTs = undefined;
+    let messageSent = _messageSent;
+    _messageSent = false;
     console.log(event);
     console.log(`Event latency: ${eventTime - Number(event.event_ts) * 1000} ms.`);
     let serverDuration = Number(event.event_ts) - Number(event.item.ts);
-    let clientDuration = (eventTime - _messageTime) / 1000;
+    let clientDuration = (eventTime - _messageTime) / 1000; //TODO: adjust for latency?
     console.log(`Server duration: ${serverDuration * 1000} ms, client duration: ${clientDuration * 1000} ms.`);
-    let duration = clientDuration; //TODO: adjust for latency?
+    let duration = serverDuration;
 
-    if (duration < MaxDuration) {
+    if (duration < MaxDuration && messageSent) {
       let durationText = duration < 1 ?
         `${(duration * 1000).toFixed(0)} milliseconds` :
         `${duration.toFixed(2)} seconds`;
@@ -80,6 +81,7 @@ async function PostMessage() {
   });
   _messageTs = result.ts;
   _messageTime = new Date().getTime();
+  _messageSent = true;
   console.log(result);
   console.log(`Message latency: ${_messageTime - Number(_messageTs) * 1000} ms.`);
 }
