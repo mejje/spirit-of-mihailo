@@ -9,8 +9,9 @@ const Users = new Map([
   ['U0RELM4CU', ':jocke:'],
   ['U0REZJ3GB', ':lars:'],
   ['UR29QEMCJ', ':tangui:'],
-  ['U02JWHNFCP5', ':zarko:'],
-  ['U032BELHP38', ':filip:']
+  ['U032BELHP38', ':filip:'],
+  ['U03AXP78WCA', ':filiph:'],
+  ['U043049G9RA', ':aymeric:']
 ]);
 const Reaction = 'postal_horn';
 const MaxDuration = 60;
