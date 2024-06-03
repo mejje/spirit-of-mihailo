@@ -11,7 +11,14 @@ const Users = new Map([
   ['UR29QEMCJ', ':tangui:'],
   ['U032BELHP38', ':filip:'],
   ['U03AXP78WCA', ':filiph:'],
-  ['U043049G9RA', ':aymeric:']
+  ['U043049G9RA', ':aymeric:'],
+  ['U0RFFJDND', ':jovan:'],
+  ['UGKS232RF', ':kosta:'],
+  ['U04L1TL43GB', ':lingjie:'],
+  ['U05BNUMGNKX', ':ljubisa:'],
+  ['U0SGLDJ8H', ':olivier:'],
+  ['U0RFG8K1P', ':bolling:'],
+  ['U2TN6P3LK', ':james:']
 ]);
 const Reaction = 'postal_horn';
 const MaxDuration = 60;
