@@ -7,18 +7,28 @@ const ChannelId = process.env.CHANNEL_ID;
 const Users = new Map([
   ['U0RG22XRV', ':dragana:'],
   ['U0RELM4CU', ':jocke:'],
-  ['U0REZJ3GB', ':lars:'],
+//  ['U0REZJ3GB', ':lars:'],
 //  ['UR29QEMCJ', ':tangui:'],
-  ['U032BELHP38', ':filip:'],
-//  ['U03AXP78WCA', ':filiph:'],
+//  ['U032BELHP38', ':filip:'],
+  ['U03AXP78WCA', ':filiph:'],
 //  ['U043049G9RA', ':aymeric:'],
   ['U0RFFJDND', ':jovan:'],
   ['UGKS232RF', ':kosta:'],
-  ['U04L1TL43GB', ':lingjie:'],
+//  ['U04L1TL43GB', ':lingjie:'],
   ['U05BNUMGNKX', ':ljubisa:'],
   ['U0SGLDJ8H', ':olivier:'],
   ['U0RFG8K1P', ':bolling:'],
-  ['U2TN6P3LK', ':james:']
+//  ['U2TN6P3LK', ':james:'],
+  ['U03LVNJ6MHD', ':adam:'],
+  ['U0RGESE6B', ':christophe:'],
+  ['U0RFFJDND', ':jovan:'],
+  ['U0RFN0RNW', ':jovana:'],
+  ['UGKS232RF', ':kosta:'],
+  ['U042JJ6PQBG', ':milica:'],
+  ['U0SGLDJ8H', ':olivier:'],
+  ['U0REZ2XUG', ':kyrcman:'],
+  ['U01UP0CMPT2', ':stefan:'],
+  ['U0RFELLRK', ':balko:']
 ]);
 const Reaction = 'postal_horn';
 const MaxDuration = 60;
