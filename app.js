@@ -21,11 +21,8 @@ const Users = new Map([
 //  ['U2TN6P3LK', ':james:'],
   ['U03LVNJ6MHD', ':adam:'],
   ['U0RGESE6B', ':christophe:'],
-  ['U0RFFJDND', ':jovan:'],
   ['U0RFN0RNW', ':jovana:'],
-  ['UGKS232RF', ':kosta:'],
   ['U042JJ6PQBG', ':milica:'],
-  ['U0SGLDJ8H', ':olivier:'],
   ['U0REZ2XUG', ':kyrcman:'],
   ['U01UP0CMPT2', ':stefan:'],
   ['U0RFELLRK', ':balko:']
@@ -37,7 +34,7 @@ const _messageBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text: `Reminder: Standup ${Array.from(Users.keys()).map(u => '<@' + u + '>').join('')}`
+    text: `Reminder: Standup ${Array.from(Users.keys()).sort().map(u => '<@' + u + '>').join('')}`
   }
 };
 
